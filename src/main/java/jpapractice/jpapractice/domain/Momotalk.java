@@ -18,8 +18,8 @@ public class Momotalk {
     @Column(name = "momotalk_id")
     private String id;
 
-    @OneToOne
-    @JoinColumn(name = "momotalkAccount")
+    @OneToOne // (mappedBy = "momotalkAccount")
+    @JoinColumn(name = "student_id")
     private Student student;
 
     public Momotalk() {

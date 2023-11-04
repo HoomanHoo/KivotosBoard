@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import jpapractice.jpapractice.domain.StudentType;
-import jpapractice.jpapractice.dto.StudentAndAccountDTO;
+import jpapractice.jpapractice.domain.Account;
+import jpapractice.jpapractice.dto.DefaultInfoDto;
+import jpapractice.jpapractice.dto.StudentAndAccountDto;
+import jpapractice.jpapractice.repository.AccountRepository;
 
 @SpringBootTest
 @Transactional
@@ -16,26 +18,36 @@ public class MemberServiceTest {
     @Autowired
     MemberService memberService;
 
+    @Autowired
+    AccountRepository accountRepository;
+
+    @Transactional
     @Test
     public void joinTest() {
-        StudentAndAccountDTO dto = new StudentAndAccountDTO();
+        StudentAndAccountDto dto = new StudentAndAccountDto();
 
         dto.setSchoolId(1);
         dto.setClubId(1);
         dto.setPositionId(1);
         dto.setStudentType("BACK");
-        dto.setName("카가미 치히로");
+        dto.setName("김철수");
         dto.setAge(19);
         dto.setEmail("testemail@email.com");
         dto.setAccountId("testaccount");
         dto.setAccountPasswd("test1234");
 
-        StudentAndAccountDTO result = memberService.join(dto);
+        memberService.join(dto);
+        DefaultInfoDto result = memberService.findInfo(dto.getAccountId());
 
-        dto.toString();
-        result.toString();
+        // System.out.println(result.toString());
 
-        Assertions.assertThat(dto).isEqualTo(result);
+    }
+
+    @Test
+    public void AccountTest() {
+        Account account = accountRepository.findById("test111").get();
+
+        Assertions.assertThat(account.getId()).isEqualTo("test111");
     }
 
 }

@@ -2,6 +2,8 @@ package jpapractice.jpapractice.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,14 +40,17 @@ public class Student {
     @Column(name = "student_email")
     private String email;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")
     private School school;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private ClubPosition position;
@@ -56,16 +61,29 @@ public class Student {
     @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
     private List<Post> posts;
 
-    @OneToOne(mappedBy = "student")
+    @OneToOne(mappedBy = "student", fetch = FetchType.LAZY)
     private Account account;
 
-    @OneToOne(mappedBy = "student")
+    @OneToOne(mappedBy = "student", fetch = FetchType.LAZY)
     private Momotalk momotalkAccount;
+
+    // @Override
+    // public String toString() {
+    // return "Student [id=" + id + ", name=" + name + ", age=" + age + ", email=" +
+    // email + ", school=" + school
+    // + ", club=" + club + ", position=" + position + ", type=" + type + ", posts="
+    // + posts + ", account="
+    // + account + ", momotalkAccount=" + momotalkAccount + "]";
+    // }
+    // toString 메서드를 오버라이딩 해서 필드 전체를 리턴시키면 객체타입 필드들에 의해서 select 문 연산이 시작된다.
 
     @Override
     public String toString() {
-        return "student_id: " + this.id + "student_name: " + this.name + "student_age: " + this.age
-                + "student_email: " + this.email + "student_type: " + this.type;
+        return "Student [id=" + id + ", name=" + name + ", age=" + age + ", email=" + email + "]";
+    }
+
+    public void addAccountInfo(Account account) {
+        this.account = account;
     }
 
     public Student() {

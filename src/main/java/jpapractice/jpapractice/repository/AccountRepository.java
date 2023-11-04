@@ -1,5 +1,7 @@
 package jpapractice.jpapractice.repository;
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -15,6 +17,19 @@ public class AccountRepository {
 
     public Account save(Account account) {
         em.persist(account);
+        em.flush();
         return account;
+
     }
+
+    public Optional<Account> findById(String id) {
+        Account result = em.find(Account.class, id);
+        return Optional.ofNullable(result);
+    }
+
+    public Optional<Account> getReferenceAccount(String id) {
+        Account result = em.getReference(Account.class, id);
+        return Optional.ofNullable(result);
+    }
+
 }

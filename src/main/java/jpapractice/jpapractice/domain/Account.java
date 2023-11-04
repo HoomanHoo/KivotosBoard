@@ -1,7 +1,10 @@
 package jpapractice.jpapractice.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -20,13 +23,14 @@ public class Account {
     @Column(name = "account_passwd")
     private String passwd;
 
-    @OneToOne
+    @JsonIgnore
+    @OneToOne // (mappedBy = "account")
     @JoinColumn(name = "student_id")
     private Student student;
 
     @Override
     public String toString() {
-        return "account_id: " + this.id + "account_passwd: " + this.passwd;
+        return "Account [id=" + id + ", passwd=" + passwd + ", student=" + student + "]";
     }
 
     public Account() {

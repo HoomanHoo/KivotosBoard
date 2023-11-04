@@ -33,4 +33,19 @@ public class InformationRepository {
         return clubPosition;
     }
 
+    public School getReferenceSchool(int id) {
+        School school = em.getReference(School.class, id);
+        return school;
+    }
+
+    public Club getReferenceClub(int id) {
+        Club club = em.getReference(Club.class, id);
+        return club;
+    }
+
+    public ClubPosition getReferenceClubPosition(int id) {
+        ClubPosition clubPosition = em.getReference(ClubPosition.class, id);
+        return clubPosition;
+    }
+
 }

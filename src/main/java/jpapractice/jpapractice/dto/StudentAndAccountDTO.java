@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StudentAndAccountDTO {
+public class StudentAndAccountDto {
     private int schoolId;
     private int clubId;
     private int positionId;
