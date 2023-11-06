@@ -24,7 +24,7 @@ public class Account {
     private String passwd;
 
     @JsonIgnore
-    @OneToOne // (mappedBy = "account")
+    @OneToOne(fetch = FetchType.LAZY) // (mappedBy = "account")
     @JoinColumn(name = "student_id")
     private Student student;
 

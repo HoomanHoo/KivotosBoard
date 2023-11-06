@@ -13,4 +13,12 @@ public class DefaultInfoDto {
     private String clubName;
     private String positionName;
     private String studentType;
+
+    @Override
+    public String toString() {
+        return "DefaultInfoDto [studentName=" + studentName + ", age=" + age + ", email=" + email + ", schoolName="
+                + schoolName + ", clubName=" + clubName + ", positionName=" + positionName + ", studentType="
+                + studentType + "]";
+    }
+
 }

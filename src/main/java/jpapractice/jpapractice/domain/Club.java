@@ -30,10 +30,10 @@ public class Club {
     @JoinColumn(name = "school_id")
     private School school;
 
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
     private List<ClubPosition> clubPosition;
 
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
     private List<Student> student;
 
     public Club() {
