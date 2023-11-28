@@ -19,7 +19,7 @@ public class Momotalk {
     @Column(name = "momotalk_id")
     private String id;
 
-    @OneToOne(fetch = FetchType.LAZY) // (mappedBy = "momotalkAccount")
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private Student student;
 

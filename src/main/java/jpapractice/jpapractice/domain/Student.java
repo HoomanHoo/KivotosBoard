@@ -1,5 +1,6 @@
 package jpapractice.jpapractice.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,17 +41,17 @@ public class Student {
     @Column(name = "student_email")
     private String email;
 
-    @JsonIgnore
+    // @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")
     private School school;
 
-    @JsonIgnore
+    // @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
     private Club club;
 
-    @JsonIgnore
+    // @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private ClubPosition position;
@@ -58,14 +59,14 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private StudentType type;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
-    private List<Post> posts;
+    // @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
+    // private List<Post> posts = new ArrayList<>();
 
-    @OneToOne(mappedBy = "student", fetch = FetchType.LAZY)
-    private Account account;
+    // @OneToOne(mappedBy = "student", fetch = FetchType.LAZY)
+    // private Account account;
 
-    @OneToOne(mappedBy = "student", fetch = FetchType.LAZY)
-    private Momotalk momotalkAccount;
+    // @OneToOne(mappedBy = "student", fetch = FetchType.LAZY)
+    // private Momotalk momotalkAccount;
 
     // @Override
     // public String toString() {
@@ -82,16 +83,12 @@ public class Student {
         return "Student [id=" + id + ", name=" + name + ", age=" + age + ", email=" + email + "]";
     }
 
-    public void addAccountInfo(Account account) {
-        this.account = account;
-    }
-
     public Student() {
     }
 
     @Builder
     public Student(Long id, String name, int age, String email, School school, Club club, ClubPosition position,
-            String type, List<Post> posts, Account account, Momotalk momotalkAccount) {
+            int type) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -99,14 +96,11 @@ public class Student {
         this.school = school;
         this.club = club;
         this.position = position;
-        this.posts = posts;
-        this.account = account;
-        this.momotalkAccount = momotalkAccount;
-        if (type.equals("BACK")) {
+        if (type == 3) {
             this.type = StudentType.BACK;
-        } else if (type.equals("MIDDLE")) {
+        } else if (type == 2) {
             this.type = StudentType.MIDDLE;
-        } else if (type.equals("FRONT")) {
+        } else if (type == 1) {
             this.type = StudentType.FRONT;
         }
 

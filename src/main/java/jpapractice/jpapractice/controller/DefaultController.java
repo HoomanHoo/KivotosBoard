@@ -2,11 +2,17 @@ package jpapractice.jpapractice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import jpapractice.jpapractice.dto.LoginDto;
 import jpapractice.jpapractice.dto.StudentAndAccountDto;
 import jpapractice.jpapractice.service.MemberService;
 
@@ -24,23 +30,22 @@ public class DefaultController {
     public String login() {
         return "member/loginPage";
     }
+    // Post Mapping은 Spring Security가 대신 처리해준다
+    // @PostMapping("/login")
+    // public String login(@Valid LoginDto loginDto, BindingResult bindingResult,
+    // RedirectAttributes redirectAttributes,
+    // HttpServletRequest request, Model model) {
 
-    @PostMapping("/login")
-    public String login(@RequestParam String id, @RequestParam String passwd) {
-        return "redirect:/mypage";
-    }
+    // if (bindingResult.hasErrors()) {
+    // model.addAttribute("loginDto", loginDto);
+    // return "member/loginPage";
+    // }
+    // request.getSession().invalidate();
+    // HttpSession session = request.getSession(true);
+    // session.setAttribute("account", loginDto.getId());
+    // redirectAttributes.addAttribute("account", loginDto.getId());
 
-    @GetMapping("/join")
-    public String join() {
-        return "member/joinPage";
-    }
+    // return "redirect:/member/mypage/{account}";
+    // }
 
-    @PostMapping("/join")
-    public String join(StudentAndAccountDto studentAndAccountDTO, RedirectAttributes redirectAttributes) {
-        System.out.println(studentAndAccountDTO.toString());
-        memberService.join(studentAndAccountDTO);
-        redirectAttributes.addAttribute("account", studentAndAccountDTO.getAccountId());
-        // return "redirect:/mypage"; -> get 방식으로 파라미터가 넘어가게 된다
-        return "redirect:/member/mypage/{account}"; // -> path parameter 방법으로 데이터를 넘김
-    }
 }

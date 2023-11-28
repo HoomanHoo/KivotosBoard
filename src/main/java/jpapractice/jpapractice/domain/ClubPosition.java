@@ -31,18 +31,18 @@ public class ClubPosition {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    @OneToMany(mappedBy = "position", fetch = FetchType.LAZY)
-    private List<Student> student;
+    // @OneToMany(mappedBy = "position", fetch = FetchType.LAZY)
+    // private List<Student> student;
 
     public ClubPosition() {
     }
 
     @Builder
-    public ClubPosition(Long id, String name, Club club, List<Student> student) {
+    public ClubPosition(Long id, String name, Club club) {
         this.id = id;
         this.name = name;
         this.club = club;
-        this.student = student;
+
     }
 
 }

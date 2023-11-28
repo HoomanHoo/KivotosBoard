@@ -23,14 +23,13 @@ public class Account {
     @Column(name = "account_passwd")
     private String passwd;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY) // (mappedBy = "account")
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private Student student;
 
     @Override
     public String toString() {
-        return "Account [id=" + id + ", passwd=" + passwd + ", student=" + student + "]";
+        return "Account [id=" + id + ", passwd=" + passwd + "]";
     }
 
     public Account() {

@@ -18,34 +18,16 @@ public class InformationRepository {
         this.em = em;
     }
 
-    public School schoolFindById(int id) {
-        School school = em.find(School.class, id);
-        return school;
+    public School getSchoolReference(int schoolId) {
+        return em.getReference(School.class, schoolId);
     }
 
-    public Club clubFindById(int id) {
-        Club club = em.find(Club.class, id);
-        return club;
+    public Club getClubReference(int clubId) {
+        return em.getReference(Club.class, clubId);
     }
 
-    public ClubPosition clubPositionFindById(int id) {
-        ClubPosition clubPosition = em.find(ClubPosition.class, id);
-        return clubPosition;
-    }
-
-    public School getReferenceSchool(int id) {
-        School school = em.getReference(School.class, id);
-        return school;
-    }
-
-    public Club getReferenceClub(int id) {
-        Club club = em.getReference(Club.class, id);
-        return club;
-    }
-
-    public ClubPosition getReferenceClubPosition(int id) {
-        ClubPosition clubPosition = em.getReference(ClubPosition.class, id);
-        return clubPosition;
+    public ClubPosition getClubPositionReference(int clubPositionId){
+        return em.getReference(ClubPosition.class, clubPositionId);
     }
 
 }

@@ -30,22 +30,20 @@ public class Club {
     @JoinColumn(name = "school_id")
     private School school;
 
-    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
-    private List<ClubPosition> clubPosition;
+    // @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
+    // private List<ClubPosition> clubPosition;
 
-    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
-    private List<Student> student;
+    // @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
+    // private List<Student> student;
 
     public Club() {
     }
 
     @Builder
-    public Club(Long id, String name, School school, List<ClubPosition> clubPosition, List<Student> student) {
+    public Club(Long id, String name, School school) {
         this.id = id;
         this.name = name;
         this.school = school;
-        this.clubPosition = clubPosition;
-        this.student = student;
     }
 
 }
