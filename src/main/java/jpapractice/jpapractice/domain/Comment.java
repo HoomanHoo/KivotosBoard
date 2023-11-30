@@ -28,7 +28,7 @@ public class Comment {
     private String commentText;
 
     @Column(name = "comment_date")
-    private LocalDateTime date;
+    private LocalDateTime commentDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
@@ -42,10 +42,10 @@ public class Comment {
     }
 
     @Builder
-    public Comment(long id, String commentText, LocalDateTime date, Student student, Post post) {
+    public Comment(long id, String commentText, LocalDateTime commentDate, Student student, Post post) {
         this.id = id;
         this.commentText = commentText;
-        this.date = date;
+        this.commentDate = commentDate;
         this.student = student;
         this.post = post;
     }

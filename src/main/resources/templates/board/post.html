@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+
+<body>
+    <header class="d-flex justify-content-center py-3">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="/" class="nav-link active" aria-current="page"
+                    sec:authorize="isAnonymous()">Home</a></li>
+            <li class="nav-item"><a href="/board" class="nav-link active" aria-current="page"
+                    sec:authorize="isAuthenticated()">Board</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+            <li class="nav-item"><a href="/login" class="nav-link" sec:authorize="isAnonymous()">Login/Regist</a></li>
+            <li class="nav-item"><a href="/logout" class="nav-link" sec:authorize="isAuthenticated()">Logout</a></li>
+        </ul>
+    </header>
+    <div class="container my-3">
+        <!-- 질문 -->
+        <h2 class="border-bottom py-2" th:text="${postDto.postSubject}"></h2>
+        <div class="card my-3">
+            <div class="card-body">
+                <div class="card-text" style="white-space: pre-line;" th:text="${postDto.postContent}"></div>
+                <div class="d-flex justify-content-end">
+                    <div class="badge bg-light text-dark p-2 text-start">
+                        <div th:text="${#temporals.format(postDto.postDate, 'yyyy-MM-dd HH:mm')}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${postDto.comments == null}">
+            <div class="card-body">
+                <div class="card-text" style="white-space: pre-line;">댓글이 없습니다</div>
+            </div>
+        </div>
+        <!-- 답변의 갯수 표시 -->
+        <div th:if="${postDto.comments != null}">
+            <h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(postDto.comments)}개의 답변이 있습니다.|"></h5>
+            <!-- 답변 반복 시작 -->
+            <div class="card my-3" th:each="comment : ${postDto.comments}">
+                <div class="card-body">
+                    <div class="card-text" style="white-space: pre-line;" th:text="${comment.commentText}"></div>
+                    <div class="d-flex justify-content-end">
+                        <div class="badge bg-light text-dark p-2 text-start">
+                            <div th:text="${#temporals.format(comment.commentDate, 'yyyy-MM-dd HH:mm')}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 답변 반복 끝  -->
+        <!-- 답변 작성 -->
+        <form th:action="@{|/answer/create/${postDto.postId}|}" method="post" class="my-3">
+            <textarea name="content" id="content" rows="10" class="form-control"></textarea>
+            <input type="submit" value="답변등록" class="btn btn-primary my-2">
+        </form>
+    </div>
+    <div th:replace="~{misc/footer :: footer}"></div>
+    <script th:src="@{/js/bootstrap.js}" defer></script>
+</body>
+
+
+</html>

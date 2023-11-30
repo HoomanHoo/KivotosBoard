@@ -48,4 +48,7 @@ public class DefaultController {
     // return "redirect:/member/mypage/{account}";
     // }
 
+    // @GetMapping("logout")
+    // public String logout()
+
 }

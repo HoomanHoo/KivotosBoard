@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -11,7 +12,6 @@
 </head>
 
 <body>
-
     <header class="d-flex justify-content-center py-3">
         <ul class="nav nav-pills">
             <li class="nav-item"><a href="/" class="nav-link active" aria-current="page"
@@ -24,23 +24,33 @@
             <li class="nav-item"><a href="/logout" class="nav-link" sec:authorize="isAuthenticated()">Logout</a></li>
         </ul>
     </header>
-    <div style="text-align: center;">
-        <h1>키보토스 인사이드에 오신 것을 환영합니다!</h1><br>
-        <p>키보토스 인사이드는 회원제 커뮤니티 사이트입니다.</p>
+    <div class="container my-3">
+        <table class="table">
+            <caption>게시판 입니다</caption>
+            <thead class="table-dark">
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일시</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="postInfo, loop : ${list}">
+                    <td th:text="${postInfo.id}"></td>
+                    <td>
+                        <a th:href="@{|/boards/post/${postInfo.id}|}" th:text="${postInfo.postSubject}"></a>
+                    </td>
+                    <td th:text="${postInfo.name}"></td>
+                    <td th:text="${#temporals.format(postInfo.postDate, 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <!-- <a href="/join">회원 가입</a> -->
 
-    <!--<footer class="py-3 my-4">
-        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
-        </ul>
-        <p class="text-center text-body-secondary">© 2023 Millennium</p>
-    </footer>-->
+
     <div th:replace="~{misc/footer :: footer}"></div>
-
     <script th:src="@{/js/bootstrap.js}" defer></script>
 </body>
 

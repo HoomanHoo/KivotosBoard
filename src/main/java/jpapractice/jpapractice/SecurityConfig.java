@@ -44,9 +44,20 @@ public class SecurityConfig {
                 .usernameParameter("id")
                 .passwordParameter("passwd")
                 .defaultSuccessUrl("/"));
-        return http.build();
+
         // usernameParameter 를 이용하여 UserDetailService 구현체에서 매개변수로 받을 매개변수명을 지정할 수 있다
         // passwordParameter 역시 마찬가지이다
+
+        // 로그아웃
+        http.logout((logout) -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true));
+        // logoutRequestMatcher 으로 로그아웃 URL을 설정한다
+        // logoutSuccessUrl 으로 로그아웃 성공 시 이동할 URL을 설정한다
+        // invalidateHttpSession 으로 로그아웃시 세션이 만료되도록 한다
+        return http.build();
+
     }
 
     // @Bean
@@ -65,6 +76,7 @@ public class SecurityConfig {
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
         // AuthenticationManager는 스프링 시큐리티의 인증을 담당
+        // PasswordEncoder와 UserDetailsService 구현체가 자동으로 설정되어 동작
     }
 
     @Bean
