@@ -14,13 +14,14 @@ import lombok.Setter;
 public class PostListDto {
     private Long id;
     private String postSubject;
+    private Long commentCount;
     private LocalDateTime postDate;
     private String name;
 
     @Override
     public String toString() {
-        return "PostListDto [id=" + id + ", postSubject=" + postSubject + ", postDate=" + postDate + ", name=" + name
-                + "]";
+        return "PostListDto [id=" + id + ", postSubject=" + postSubject + ", commentCount=" + commentCount
+                + ", postDate=" + postDate + ", name=" + name + "]";
     }
 
 }

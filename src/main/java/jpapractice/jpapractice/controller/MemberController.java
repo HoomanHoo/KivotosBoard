@@ -19,7 +19,7 @@ import jpapractice.jpapractice.dto.StudentAndAccountDto;
 import jpapractice.jpapractice.service.MemberService;
 
 @Controller
-@RequestMapping("/member") // 메서드들에 매핑된 URL 앞에 /mmeber path를 추가함
+@RequestMapping("/member") // 메서드들에 매핑된 URL 앞에 /memeber path를 추가함
 public class MemberController {
 
     private final MemberService memberService;

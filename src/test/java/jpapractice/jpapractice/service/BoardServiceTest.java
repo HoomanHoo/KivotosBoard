@@ -75,17 +75,18 @@ public class BoardServiceTest {
         }
 
         em.clear();
-        // Long start1 = System.currentTimeMillis();
-        // List<PostListDto> result = boardRepository.findPostsDto();
+        Long start1 = System.currentTimeMillis();
+        List<PostListDto> result = boardRepository.findPosts(0);
 
-        // for (int i = 0; i < result.size(); i++) {
-        // PostListDto dto = result.get(i);
-        // String sResult = "DTO: " + dto.toString();
-        // }
-        // em.clear();
-        // Long end1 = System.currentTimeMillis();
-        // Long t1 = end1 - start1;
-        // System.out.println("DTO: " + t1);
+        for (int i = 0; i < result.size(); i++) {
+            PostListDto dto = result.get(i);
+            String sResult = "DTO: " + dto.toString();
+            System.out.println(sResult);
+        }
+        em.clear();
+        Long end1 = System.currentTimeMillis();
+        Long t1 = end1 - start1;
+        System.out.println("DTO: " + t1);
 
         // Long start2 = System.currentTimeMillis();
         // List<Post> result2 = boardRepository.findPostsEntity();
