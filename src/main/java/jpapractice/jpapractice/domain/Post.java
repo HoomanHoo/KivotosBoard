@@ -79,4 +79,12 @@ public class Post {
         ", comments=" + comments +
         '}';
   }
+
+  public void changePostSubject(String subject) {
+    this.postSubject = subject;
+  }
+
+  public void changePostContent(String content) {
+    this.postContent = content;
+  }
 }

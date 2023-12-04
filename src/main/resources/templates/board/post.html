@@ -43,12 +43,6 @@
     </div>
   </div>
   <div>
-    <a th:text="${#authentication.getPrincipal().getUsername()}"></a>
-  </div>
-  <div>
-    <a th:text="${postDto.accountId}"></a>
-  </div>
-  <div>
     <a th:href="@{|${postDto.postId}/modify|}" class="btn btn-sm btn-outline-secondary"
        sec:authorize="isAuthenticated()"
        th:if="${#authentication.getPrincipal().getUsername() == postDto.accountId}"

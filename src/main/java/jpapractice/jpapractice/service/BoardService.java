@@ -8,10 +8,10 @@ import jpapractice.jpapractice.domain.Account;
 import jpapractice.jpapractice.domain.Comment;
 import jpapractice.jpapractice.domain.Post;
 import jpapractice.jpapractice.domain.Student;
-import jpapractice.jpapractice.dto.CommentDto;
-import jpapractice.jpapractice.dto.PostDto;
-import jpapractice.jpapractice.dto.PostListDto;
-import jpapractice.jpapractice.dto.WritePostDto;
+import jpapractice.jpapractice.dto.board.CommentDto;
+import jpapractice.jpapractice.dto.board.PostDto;
+import jpapractice.jpapractice.dto.board.PostListDto;
+import jpapractice.jpapractice.dto.board.WritePostDto;
 import jpapractice.jpapractice.repository.BoardRepository;
 import jpapractice.jpapractice.repository.InformationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,18 @@ public class BoardService {
   }
 
   @Transactional
+  public Long modifyPost(WritePostDto writePostDto, Post post) {
+    post.changePostSubject(writePostDto.getPostSubject());
+    post.changePostContent(writePostDto.getPostContent());
+    return post.getId();
+  }
+
+  @Transactional
+  public Post getPost(Long id) {
+    return boardRepository.getPost(id);
+  }
+
+  @Transactional
   public List<PostListDto> loadPosts(int pageNum) {
     int startPost = pageNum - 1;
     return boardRepository.findPosts(startPost);
@@ -62,11 +74,10 @@ public class BoardService {
   }
 
   @Transactional
-  public PostDto getPost(Long postId) {
+  public PostDto getPostAndComment(Long postId) {
     Post post = boardRepository.getPost(postId);
     Account account = informationRepository.getAccountByStudentInfo(
         post.getStudent().getId());
-    System.out.println(account.toString());
 
     List<Comment> comments = post.getComments();
     if (comments.isEmpty()) {
@@ -118,6 +129,6 @@ public class BoardService {
         .build();
 
     boardRepository.saveComment(comment);
-    return getPost(postId);
+    return getPostAndComment(postId);
   }
 }
