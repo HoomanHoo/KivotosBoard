@@ -68,6 +68,10 @@ public class BoardRepository {
     // return em.find(Post.class, postId);
   }
 
+  public Comment getComment(Long commentId) {
+    return em.find(Comment.class, commentId);
+  }
+
   // public List<Post> findPosts2(int startPost) {
   // int startPosition = startPost * 30;
   // return em.createQuery(

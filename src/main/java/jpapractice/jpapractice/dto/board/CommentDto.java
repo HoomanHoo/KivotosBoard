@@ -14,6 +14,7 @@ public class CommentDto {
 
   private Long commentId;
   private String commentText;
+  private String accountId;
   private String studentName;
   private LocalDateTime commentDate;
 

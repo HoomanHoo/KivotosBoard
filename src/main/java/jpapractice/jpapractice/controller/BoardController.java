@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import jpapractice.jpapractice.domain.Post;
+import jpapractice.jpapractice.dto.board.CommentDto;
 import jpapractice.jpapractice.dto.board.PostDto;
 import jpapractice.jpapractice.dto.board.PostListDto;
 import jpapractice.jpapractice.dto.board.WritePostDto;
@@ -65,7 +66,6 @@ public class BoardController {
   @GetMapping("{postId}/modify")
   public String modifyPost(@PathVariable("postId") Long id,
       Principal principal, WritePostDto post, Model model) {
-    model.addAttribute("createOrModify", "post/" + id + "/modify");
     PostDto postData = boardService.getPostAndComment(id);
     model.addAttribute("post", postData);
     return "board/writePost";
@@ -113,6 +113,30 @@ public class BoardController {
         principal.getName(), postId);
     model.addAttribute("postDto", postDto);
 
+    return "redirect:/post/{postId}";
+  }
+
+  @GetMapping("/{postId}/comment/{commentId}/modify")
+  public String modifyComment(@PathVariable("postId") Long postId,
+      @PathVariable("commentId") Long commentId, Model model) {
+    CommentDto commentDto = boardService.getComment(commentId);
+    model.addAttribute("postId", postId);
+    model.addAttribute("commentDto", commentDto);
+    return "board/modifyComment";
+  }
+
+  @PostMapping("/{postId}/comment/{commentId}/modify")
+  public String modifyComment(@PathVariable("postId") Long postId,
+      @PathVariable("commentId") Long commentId,
+      @RequestParam String comment, Principal principal,
+      RedirectAttributes redirectAttributes) {
+    CommentDto commentDto = boardService.getComment(commentId);
+    if (!commentDto.getAccountId().equals(principal.getName())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+          "사용자가 일치하지 않습니다.");
+    }
+    boardService.modifyComment(comment, commentId);
+    redirectAttributes.addAttribute("postId", postId);
     return "redirect:/post/{postId}";
   }
 

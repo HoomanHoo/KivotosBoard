@@ -61,6 +61,22 @@ public class BoardService {
   }
 
   @Transactional
+  public CommentDto getComment(Long id) {
+    Comment comment = boardRepository.getComment(id);
+    CommentDto commentDto = new CommentDto();
+    commentDto.setCommentId(comment.getId());
+    commentDto.setCommentText(comment.getCommentText());
+    commentDto.setAccountId(comment.getAccount().getId());
+    return commentDto;
+  }
+
+  @Transactional
+  public void modifyComment(String commentText, Long commentId) {
+    Comment comment = boardRepository.getComment(commentId);
+    comment.changeCommentText(commentText);
+  }
+
+  @Transactional
   public List<PostListDto> loadPosts(int pageNum) {
     int startPost = pageNum - 1;
     return boardRepository.findPosts(startPost);
@@ -76,20 +92,21 @@ public class BoardService {
   @Transactional
   public PostDto getPostAndComment(Long postId) {
     Post post = boardRepository.getPost(postId);
-    Account account = informationRepository.getAccountByStudentInfo(
-        post.getStudent().getId());
+    Account account = informationRepository.getAccountById(
+        post.getAccount().getId());
+    System.out.println(account.getId());
+
+    PostDto postDto = new PostDto();
+    postDto.setPostId(post.getId());
+    postDto.setPostSubject(post.getPostSubject());
+    postDto.setPostContent(post.getPostContent());
+    postDto.setAccountId(account.getId());
+    postDto.setPostDate(post.getPostDate());
+    postDto.setView(post.getView());
+    postDto.setStudentName(post.getStudent().getName());
 
     List<Comment> comments = post.getComments();
     if (comments.isEmpty()) {
-      PostDto postDto = new PostDto();
-      postDto.setPostId(post.getId());
-      postDto.setPostSubject(post.getPostSubject());
-      postDto.setPostContent(post.getPostContent());
-      postDto.setAccountId(account.getId());
-      postDto.setPostDate(post.getPostDate());
-      postDto.setView(post.getView());
-      postDto.setStudentName(post.getStudent().getName());
-
       return postDto;
     } else {
       List<CommentDto> commentDtos = new ArrayList<>();
@@ -98,17 +115,12 @@ public class BoardService {
         CommentDto commentDto = new CommentDto();
         commentDto.setCommentId(comment.getId());
         commentDto.setCommentText(comment.getCommentText());
+        commentDto.setAccountId(comment.getAccount().getId());
         commentDto.setStudentName(comment.getStudent().getName());
         commentDto.setCommentDate(comment.getCommentDate());
         commentDtos.add(commentDto);
       }
-      PostDto postDto = new PostDto();
-      postDto.setPostId(post.getId());
-      postDto.setPostSubject(post.getPostSubject());
-      postDto.setPostContent(post.getPostContent());
-      postDto.setPostDate(post.getPostDate());
-      postDto.setView(post.getView());
-      postDto.setStudentName(post.getStudent().getName());
+      
       postDto.setComments(commentDtos);
       return postDto;
     }
@@ -118,12 +130,13 @@ public class BoardService {
   @Transactional
   public PostDto saveComment(String commentText, String accountId,
       Long postId) {
-    Student student = informationRepository.getAccountById(accountId)
-                                           .getStudent();
+    Account account = informationRepository.getAccountById(accountId);
+    Student student = account.getStudent();
     Comment comment = new Comment()
         .builder()
         .commentText(commentText)
         .commentDate(LocalDateTime.now())
+        .account(account)
         .student(student)
         .post(informationRepository.getPostReference(postId))
         .build();

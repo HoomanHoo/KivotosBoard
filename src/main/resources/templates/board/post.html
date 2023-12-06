@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="utf-8">
@@ -42,18 +42,21 @@
       </div>
     </div>
   </div>
+  <!-- 게시글 수정 버튼 -->
+  <div th:text="${#authentication.getPrincipal().getUsername()}"></div>
+  <div th:text="${postDto.accountId}"></div>
   <div>
     <a th:href="@{|${postDto.postId}/modify|}" class="btn btn-sm btn-outline-secondary"
        sec:authorize="isAuthenticated()"
        th:if="${#authentication.getPrincipal().getUsername() == postDto.accountId}"
        th:text="수정"></a>
   </div>
+  <!-- 답변의 갯수 표시 -->
   <div th:if="${postDto.comments == null}">
     <div class="card-body">
       <div class="card-text" style="white-space: pre-line;">댓글이 없습니다</div>
     </div>
   </div>
-  <!-- 답변의 갯수 표시 -->
   <div th:if="${postDto.comments != null}">
     <h5 class="border-bottom my-3 py-2"
         th:text="|${#lists.size(postDto.comments)}개의 답변이 있습니다.|"></h5>
@@ -68,6 +71,12 @@
               <span th:if="${comment.studentName != null}" th:text="${comment.studentName}"></span>
             </div>
             <div th:text="${#temporals.format(comment.commentDate, 'yyyy-MM-dd HH:mm')}"></div>
+            <!-- 댓글 수정 버튼 -->
+            <a th:href="@{|${postDto.postId}/comment/${comment.commentId}/modify|}"
+               class="btn btn-sm btn-outline-secondary"
+               sec:authorize="isAuthenticated()"
+               th:if="${#authentication.getPrincipal().getUsername() == comment.accountId}"
+               th:text="수정"></a>
           </div>
         </div>
       </div>
