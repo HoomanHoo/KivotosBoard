@@ -1,7 +1,5 @@
 package jpapractice.jpapractice.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,29 +14,34 @@ import lombok.Getter;
 @Table(name = "member_account_information")
 @Getter
 public class Account {
-    @Id
-    @Column(name = "account_id")
-    private String id;
 
-    @Column(name = "account_passwd")
-    private String passwd;
+  @Id
+  @Column(name = "account_id")
+  private String id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id")
-    private Student student;
+  @Column(name = "account_passwd")
+  private String passwd;
 
-    @Override
-    public String toString() {
-        return "Account [id=" + id + ", passwd=" + passwd + "]";
-    }
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "student_id")
+  private Student student;
 
-    public Account() {
-    }
+  public void changePasswd(String passwd) {
+    this.passwd = passwd;
+  }
 
-    @Builder
-    public Account(String id, String passwd, Student student) {
-        this.id = id;
-        this.passwd = passwd;
-        this.student = student;
-    }
+  @Override
+  public String toString() {
+    return "Account [id=" + id + ", passwd=" + passwd + "]";
+  }
+
+  public Account() {
+  }
+
+  @Builder
+  public Account(String id, String passwd, Student student) {
+    this.id = id;
+    this.passwd = passwd;
+    this.student = student;
+  }
 }

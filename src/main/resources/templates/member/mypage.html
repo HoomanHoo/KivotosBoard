@@ -13,12 +13,21 @@
 <body>
 <header class="d-flex justify-content-center py-3">
   <ul class="nav nav-pills">
-    <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
-    <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
+    <li class="nav-item"><a href="/" class="nav-link" aria-current="page"
+                            sec:authorize="isAnonymous()">Home</a></li>
+    <li class="nav-item"><a href="/post/list/1" class="nav-link" aria-current="page"
+                            sec:authorize="isAuthenticated()">Board</a></li>
+
     <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-    <li class="nav-item"><a href="/mypage" class="nav-link active" aria-current="page">MyPage</a>
+    <li class="nav-item"><a href="#" class="nav-link" sec:authorize="isAnonymous()">FAQs</a></li>
+    <li class="nav-item"><a
+        th:href="@{|../../../member/mypage/${#authentication.getPrincipal().getUsername()}|}"
+        class="nav-link active" sec:authorize="isAuthenticated()">MyPage</a>
     </li>
-    <li class="nav-item"><a href="/login" class="nav-link">Login/Regist</a></li>
+    <li class="nav-item"><a href="/login" class="nav-link" sec:authorize="isAnonymous()">Login/Regist</a>
+    </li>
+    <li class="nav-item"><a href="/logout" class="nav-link"
+                            sec:authorize="isAuthenticated()">Logout</a></li>
   </ul>
 </header>
 <div class="row">
@@ -39,6 +48,10 @@
           <tr>
             <td>이름</td>
             <td th:text="${info.studentName}"></td>
+          </tr>
+          <tr>
+            <td>아이디</td>
+            <td th:text="${info.id}"></td>
           </tr>
           <tr>
             <td>나이</td>
@@ -66,7 +79,8 @@
     </div>
     <div class="row">
       <div class="col">
-        <input type="submit" class="btn btn-primary" value="정보 수정">
+        <input type="button" th:onclick="|location.href='@{|${info.id}/modify|}'|"
+               class="btn btn-primary" value="정보 수정">
       </div>
     </div>
   </div>

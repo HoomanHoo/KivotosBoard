@@ -60,4 +60,14 @@ public class InformationRepository {
              .setParameter("id", id)
              .getSingleResult();
   }
+
+  public Club getClubByClubName(String clubName) {
+    String query = "SELECT c FROM Club WHERE c.name = :name";
+    return em.createQuery(query, Club.class).getSingleResult();
+  }
+
+  public ClubPosition getClubPositionByName(String clubName) {
+    String query = "SELECT cn FROM ClubPosition WHERE cn.name = :name";
+    return em.createQuery(query, ClubPosition.class).getSingleResult();
+  }
 }

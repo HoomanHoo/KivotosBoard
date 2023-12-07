@@ -1,10 +1,12 @@
 package jpapractice.jpapractice.controller;
 
 import jakarta.validation.Valid;
+import java.security.Principal;
 import jpapractice.jpapractice.dto.member.DefaultInfoDto;
 import jpapractice.jpapractice.dto.member.StudentAndAccountDto;
 import jpapractice.jpapractice.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/member") // 메서드들에 매핑된 URL 앞에 /memeber path를 추가함
@@ -53,12 +57,40 @@ public class MemberController {
   }
 
   @GetMapping("/mypage/{account}") // path parameter을 받을 때의 방법
-  public String mypage(@PathVariable("account") String account,
+  public String myPage(@PathVariable("account") String account,
       Model model) {
     DefaultInfoDto result = memberService.findInfo(account);
     model.addAttribute("info", result);
     return "member/mypage";
   }
   // @PathVariable(parameter이름) 으로 값을 가져올수 있다.
+
+  @GetMapping("mypage/{accountId}/modify")
+  public String modifyInfo(StudentAndAccountDto studentAndAccountDto,
+      @PathVariable("accountId") String accountId, Model model) {
+    studentAndAccountDto = memberService.getUserInfoForModify(
+        accountId);
+    model.addAttribute("studentAndAccountDto", studentAndAccountDto);
+    return "member/modifyInfo";
+  }
+
+  @PostMapping("/mypage/{accountId}/modify")
+  public String modifyInfo(@PathVariable("accountId") String accountId,
+      @Valid StudentAndAccountDto studentAndAccountDto,
+      BindingResult bindingResult,
+      Model model,
+      RedirectAttributes redirectAttributes, Principal principal) {
+    if (bindingResult.hasErrors()) {
+      return "member/modifyInfo";
+    }
+    if (!accountId.equals(principal.getName())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+          "수정 권한이 없습니다.");
+    }
+    memberService.modifyInfo(studentAndAccountDto, accountId);
+    redirectAttributes.addAttribute("accountId", accountId);
+
+    return "redirect:/member/mypage/{accountId}";
+  }
 
 }

@@ -59,13 +59,96 @@ public class MemberService {
     return account.getId();
   }
 
-  public DefaultInfoDto findInfo(String account) {
-    Optional<Account> result = memberRepository.accountFindById(account);
+  public DefaultInfoDto findInfo(String accountId) {
+    Optional<Account> result = memberRepository.accountFindById(accountId);
     if (result.isEmpty()) {
       throw new DataNotFoundException("account not found");
     }
-    return new DefaultInfoDto();
+    Account account = result.get();
+    DefaultInfoDto defaultInfoDto = DefaultInfoDto.builder()
+                                                  .id(account.getId())
+                                                  .studentName(
+                                                      account.getStudent()
+                                                             .getName())
+                                                  .age(account.getStudent()
+                                                              .getAge())
+                                                  .email(
+                                                      account.getStudent()
+                                                             .getEmail())
+                                                  .schoolName(
+                                                      account.getStudent()
+                                                             .getSchool()
+                                                             .getSchoolName())
+                                                  .clubName(
+                                                      account.getStudent()
+                                                             .getClub()
+                                                             .getName())
+                                                  .positionName(
+                                                      account.getStudent()
+                                                             .getPosition()
+                                                             .getName())
+                                                  .studentType(
+                                                      account.getStudent()
+                                                             .getType()
+                                                             .name())
+                                                  .build();
+    return defaultInfoDto;
 
+  }
+
+  @Transactional
+  public StudentAndAccountDto getUserInfoForModify(String accountId) {
+    Optional<Account> optionalAccount = memberRepository.accountFindById(
+        accountId);
+    if (optionalAccount.isEmpty()) {
+      throw new DataNotFoundException("사용자가 존재하지 않습니다.");
+    }
+    Account account = optionalAccount.get();
+    StudentAndAccountDto studentAndAccountDto = new StudentAndAccountDto();
+    studentAndAccountDto.setAccountId(account.getId());
+    studentAndAccountDto.setEmail(account.getStudent().getEmail());
+    studentAndAccountDto.setAge(account.getStudent().getAge());
+    studentAndAccountDto.setName(account.getStudent().getName());
+    studentAndAccountDto.setSchoolId(
+        account.getStudent().getSchool().getId().intValue());
+    studentAndAccountDto.setClubId(
+        account.getStudent().getClub().getId().intValue());
+    studentAndAccountDto.setPositionId(
+        account.getStudent().getPosition().getId().intValue());
+    String type = account.getStudent().getType().name();
+    if (type.equals("BACK")) {
+      studentAndAccountDto.setStudentType(3);
+    } else if (type.equals("MIDDLE")) {
+      studentAndAccountDto.setStudentType(2);
+    } else if (type.equals("FRONT")) {
+      studentAndAccountDto.setStudentType(1);
+    }
+    return studentAndAccountDto;
+
+  }
+
+  @Transactional
+  public String modifyInfo(StudentAndAccountDto studentAndAccountDto,
+      String accountId) {
+    Optional<Account> optionalAccount = memberRepository.accountFindById(
+        accountId);
+    if (optionalAccount.isEmpty()) {
+      throw new DataNotFoundException("해당하는 사용자가 없습니다.");
+    } else {
+      Account account = optionalAccount.get();
+      Student student = account.getStudent();
+      account.changePasswd(
+          passwordEncoder.encode(studentAndAccountDto.getAccountPasswd()));
+      student.changeAge(studentAndAccountDto.getAge());
+      student.changeEmail(studentAndAccountDto.getEmail());
+      student.changeClub(informationRepository.getClubReference(
+          studentAndAccountDto.getClubId()));
+      student.changeClubPosition(
+          informationRepository.getClubPositionReference(
+              studentAndAccountDto.getPositionId()));
+      student.changeStudentType(studentAndAccountDto.getStudentType());
+      return accountId;
+    }
   }
 
 }
