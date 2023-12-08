@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import jpapractice.jpapractice.customException.DataNotFoundException;
 import jpapractice.jpapractice.domain.Account;
 import jpapractice.jpapractice.domain.Comment;
 import jpapractice.jpapractice.domain.Post;
@@ -57,7 +59,12 @@ public class BoardService {
 
   @Transactional
   public Post getPost(Long id) {
-    return boardRepository.getPost(id);
+    Optional<Post> optionalPost = boardRepository.getPost(id);
+    if (optionalPost.isEmpty()) {
+      throw new DataNotFoundException("사용자가 존재하지 않습니다");
+    } else {
+      return optionalPost.get();
+    }
   }
 
   @Transactional
@@ -91,7 +98,11 @@ public class BoardService {
 
   @Transactional
   public PostDto getPostAndComment(Long postId) {
-    Post post = boardRepository.getPost(postId);
+    Optional<Post> optionalPost = boardRepository.getPost(postId);
+    if (optionalPost.isEmpty()) {
+      throw new DataNotFoundException("사용자가 존재하지 않습니다");
+    }
+    Post post = optionalPost.get();
     Account account = informationRepository.getAccountById(
         post.getAccount().getId());
     System.out.println(account.getId());
@@ -120,7 +131,7 @@ public class BoardService {
         commentDto.setCommentDate(comment.getCommentDate());
         commentDtos.add(commentDto);
       }
-      
+
       postDto.setComments(commentDtos);
       return postDto;
     }
@@ -143,5 +154,17 @@ public class BoardService {
 
     boardRepository.saveComment(comment);
     return getPostAndComment(postId);
+  }
+
+  @Transactional
+  public void deletePost(Long postId) {
+    Post post = informationRepository.getPostReference(postId);
+    boardRepository.removePost(post);
+  }
+
+  @Transactional
+  public void deleteComment(Long commentId) {
+    Comment comment = informationRepository.getCommentReference(commentId);
+    boardRepository.removeComment(comment);
   }
 }

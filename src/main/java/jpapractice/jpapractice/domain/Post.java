@@ -1,5 +1,6 @@
 package jpapractice.jpapractice.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,7 +47,7 @@ public class Post {
   @JoinColumn(name = "student_id")
   private Student student;
 
-  @OneToMany(mappedBy = "post")
+  @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
   private List<Comment> comments = new ArrayList<>();
 
   public Post() {

@@ -140,5 +140,25 @@ public class BoardController {
     return "redirect:/post/{postId}";
   }
 
+  @PostMapping("/{postId}/remove")
+  public String removePost(@PathVariable("postId") Long postId,
+      @RequestParam String accountId, Principal principal) {
+    if (!accountId.equals(principal.getName())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+          "삭제 권한이 없습니다");
+    }
+    boardService.deletePost(postId);
+    return "redirect:/post/list/1";
+  }
+
+  @PostMapping("/{postId}/comment/{commentId}/remove")
+  public String removeComment(@PathVariable Long postId,
+      @PathVariable Long commentId,
+      RedirectAttributes redirectAttributes) {
+    boardService.deleteComment(commentId);
+    redirectAttributes.addAttribute("postId", postId);
+    return "redirect:/post/{postId}";
+  }
+
 
 }

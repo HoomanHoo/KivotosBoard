@@ -2,6 +2,7 @@ package jpapractice.jpapractice.repository;
 
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import jpapractice.jpapractice.domain.Comment;
 import jpapractice.jpapractice.domain.Post;
 import jpapractice.jpapractice.dto.board.PostListDto;
@@ -55,21 +56,29 @@ public class BoardRepository {
 
   }
 
-  public Post getPost(Long postId) {
+  public Optional<Post> getPost(Long postId) {
     String query = "select p"
         + " from Post p"
         + " join fetch p.student s"
         + " left join fetch p.comments c"
         + " left join fetch c.student cs"
         + " where p.id = :id";
-    return em.createQuery(query, Post.class)
-             .setParameter("id", postId)
-             .getSingleResult();
+    return Optional.ofNullable(em.createQuery(query, Post.class)
+                                 .setParameter("id", postId)
+                                 .getSingleResult());
     // return em.find(Post.class, postId);
   }
 
   public Comment getComment(Long commentId) {
     return em.find(Comment.class, commentId);
+  }
+
+  public void removePost(Post post) {
+    em.remove(post);
+  }
+
+  public void removeComment(Comment comment) {
+    em.remove(comment);
   }
 
   // public List<Post> findPosts2(int startPost) {

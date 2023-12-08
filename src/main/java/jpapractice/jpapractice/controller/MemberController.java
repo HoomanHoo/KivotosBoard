@@ -66,9 +66,13 @@ public class MemberController {
   // @PathVariable(parameter이름) 으로 값을 가져올수 있다.
 
   @GetMapping("mypage/{accountId}/modify")
-  public String modifyInfo(StudentAndAccountDto studentAndAccountDto,
-      @PathVariable("accountId") String accountId, Model model) {
-    studentAndAccountDto = memberService.getUserInfoForModify(
+  public String modifyInfo(
+      @PathVariable("accountId") String accountId, Model model,
+      Principal principal) {
+    if (!accountId.equals(principal.getName())) {
+      return "redirect:/";
+    }
+    StudentAndAccountDto studentAndAccountDto = memberService.getUserInfoForModify(
         accountId);
     model.addAttribute("studentAndAccountDto", studentAndAccountDto);
     return "member/modifyInfo";
