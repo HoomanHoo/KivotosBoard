@@ -65,33 +65,34 @@ public class MemberService {
       throw new DataNotFoundException("account not found");
     }
     Account account = result.get();
-    DefaultInfoDto defaultInfoDto = DefaultInfoDto.builder()
-                                                  .id(account.getId())
-                                                  .studentName(
-                                                      account.getStudent()
-                                                             .getName())
-                                                  .age(account.getStudent()
-                                                              .getAge())
-                                                  .email(
-                                                      account.getStudent()
-                                                             .getEmail())
-                                                  .schoolName(
-                                                      account.getStudent()
-                                                             .getSchool()
-                                                             .getSchoolName())
-                                                  .clubName(
-                                                      account.getStudent()
-                                                             .getClub()
-                                                             .getName())
-                                                  .positionName(
-                                                      account.getStudent()
-                                                             .getPosition()
-                                                             .getName())
-                                                  .studentType(
-                                                      account.getStudent()
-                                                             .getType()
-                                                             .name())
-                                                  .build();
+    DefaultInfoDto defaultInfoDto
+        = DefaultInfoDto.builder()
+                        .id(account.getId())
+                        .studentName(
+                            account.getStudent()
+                                   .getName())
+                        .age(account.getStudent()
+                                    .getAge())
+                        .email(
+                            account.getStudent()
+                                   .getEmail())
+                        .schoolName(
+                            account.getStudent()
+                                   .getSchool()
+                                   .getSchoolName())
+                        .clubName(
+                            account.getStudent()
+                                   .getClub()
+                                   .getName())
+                        .positionName(
+                            account.getStudent()
+                                   .getPosition()
+                                   .getName())
+                        .studentType(
+                            account.getStudent()
+                                   .getType()
+                                   .name())
+                        .build();
     return defaultInfoDto;
 
   }
@@ -149,6 +150,12 @@ public class MemberService {
       student.changeStudentType(studentAndAccountDto.getStudentType());
       return accountId;
     }
+  }
+
+  @Transactional
+  public void unregistMember(String accountId) {
+    Account account = informationRepository.getAccountReference(accountId);
+    memberRepository.unregistMember(account);
   }
 
 }

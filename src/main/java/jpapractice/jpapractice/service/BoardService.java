@@ -38,14 +38,15 @@ public class BoardService {
         writePostDto.getWriter()).getStudent();
     Account account = informationRepository.getAccountReference(
         writePostDto.getWriter());
-    Post post = new Post().builder()
-                          .subject(writePostDto.getPostSubject())
-                          .postContent(writePostDto.getPostContent())
-                          .account(account)
-                          .student(student)
-                          .postDate(LocalDateTime.now())
-                          .view(0)
-                          .build();
+    new Post();
+    Post post = Post.builder()
+                    .subject(writePostDto.getPostSubject())
+                    .postContent(writePostDto.getPostContent())
+                    .account(account)
+                    .student(student)
+                    .postDate(LocalDateTime.now())
+                    .view(0)
+                    .build();
 
     return boardRepository.savePost(post).getId();
   }
@@ -59,12 +60,16 @@ public class BoardService {
 
   @Transactional
   public Post getPost(Long id) {
-    Optional<Post> optionalPost = boardRepository.getPost(id);
-    if (optionalPost.isEmpty()) {
-      throw new DataNotFoundException("사용자가 존재하지 않습니다");
-    } else {
-      return optionalPost.get();
-    }
+
+    Post post = boardRepository.getPost(id).orElseThrow(
+        () -> new DataNotFoundException("사용자가 없습니다"));
+    return post;
+//    Optional<Post> optionalPost = boardRepository.getPost(id);
+//    if (optionalPost.isEmpty()) {
+//      throw new DataNotFoundException("사용자가 존재하지 않습니다");
+//    } else {
+//      return optionalPost.get();
+//    }
   }
 
   @Transactional
@@ -143,7 +148,8 @@ public class BoardService {
       Long postId) {
     Account account = informationRepository.getAccountById(accountId);
     Student student = account.getStudent();
-    Comment comment = new Comment()
+    
+    Comment comment = Comment
         .builder()
         .commentText(commentText)
         .commentDate(LocalDateTime.now())

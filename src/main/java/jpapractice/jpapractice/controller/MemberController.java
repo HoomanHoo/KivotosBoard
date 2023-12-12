@@ -3,6 +3,7 @@ package jpapractice.jpapractice.controller;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import jpapractice.jpapractice.dto.member.DefaultInfoDto;
+import jpapractice.jpapractice.dto.member.PasswordDto;
 import jpapractice.jpapractice.dto.member.StudentAndAccountDto;
 import jpapractice.jpapractice.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +96,42 @@ public class MemberController {
     redirectAttributes.addAttribute("accountId", accountId);
 
     return "redirect:/member/mypage/{accountId}";
+  }
+
+  @GetMapping("/mypage/{accountId}/unregist")
+  public String unregist(Model model) {
+    System.out.println("테스트");
+    model.addAttribute("passwordDto", new PasswordDto());
+    return "member/unregist";
+  }
+
+  @PostMapping("/mypage/{accountId}/unregist")
+  public String unregist(@Valid PasswordDto passwordDto,
+      BindingResult bindingResult,
+      @PathVariable("accountId") String accountId, Principal principal) {
+    if (bindingResult.hasErrors()) {
+//      return String.format("redirect:unregist",
+//          accountId);
+      System.out.println("haserror");
+      return "member/unregist";
+    }
+    if (!passwordDto.getPassword()
+                    .equals(passwordDto.getPasswordCheck())) {
+      bindingResult.rejectValue("passwordCheck", "passwdIncorrect",
+          "비밀번호가 일치하지 않습니다");
+//      return String.format("redirect:unregist",
+//          accountId); -> RedirectAttribute 사용하지 않고도 Redirect 가능
+      System.out.println("incoreect password");
+      return "member/unregist";
+    }
+    if (!accountId.equals(principal.getName())) {
+      System.out.println("incorrect account");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+          "사용자가 일치하지 않습니다");
+    }
+    System.out.println("delete account");
+    memberService.unregistMember(accountId);
+    return "redirect:/logout";
   }
 
 }
