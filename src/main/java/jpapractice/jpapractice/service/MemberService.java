@@ -7,6 +7,7 @@ import jpapractice.jpapractice.domain.Account;
 import jpapractice.jpapractice.domain.Student;
 import jpapractice.jpapractice.dto.member.DefaultInfoDto;
 import jpapractice.jpapractice.dto.member.StudentAndAccountDto;
+import jpapractice.jpapractice.repository.BoardRepository;
 import jpapractice.jpapractice.repository.InformationRepository;
 import jpapractice.jpapractice.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,18 @@ public class MemberService {
 
   private final MemberRepository memberRepository;
   private final InformationRepository informationRepository;
+
+  private final BoardRepository boardRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
   public MemberService(MemberRepository memberRepository,
       InformationRepository informationRepository,
+      BoardRepository boardRepository,
       PasswordEncoder passwordEncoder) {
     this.memberRepository = memberRepository;
     this.informationRepository = informationRepository;
+    this.boardRepository = boardRepository;
     this.passwordEncoder = passwordEncoder;
   }
 
@@ -164,7 +169,11 @@ public class MemberService {
   @Transactional
   public void unregistMember(String accountId) {
     Account account = informationRepository.getAccountReference(accountId);
+    boardRepository.removePostsByAccount(account);
+    boardRepository.removeCommentsBtAccount(account);
+    memberRepository.removeStudentInfo(account);
     memberRepository.unregistMember(account);
+
   }
 
 }

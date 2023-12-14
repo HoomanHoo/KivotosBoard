@@ -3,6 +3,7 @@ package jpapractice.jpapractice.repository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+import jpapractice.jpapractice.domain.Account;
 import jpapractice.jpapractice.domain.Comment;
 import jpapractice.jpapractice.domain.Post;
 import jpapractice.jpapractice.dto.board.PostListDto;
@@ -13,10 +14,13 @@ import org.springframework.stereotype.Repository;
 public class BoardRepository {
 
   private final EntityManager em;
+  private final InformationRepository informationRepository;
 
   @Autowired
-  public BoardRepository(EntityManager entityManager) {
+  public BoardRepository(EntityManager entityManager,
+      InformationRepository informationRepository) {
     this.em = entityManager;
+    this.informationRepository = informationRepository;
 
   }
 
@@ -78,7 +82,18 @@ public class BoardRepository {
   }
 
   public void removeComment(Comment comment) {
+
     em.remove(comment);
+  }
+
+  public void removePostsByAccount(Account account) {
+    String query = "DELETE FROM Post p WHERE p.account = :account";
+    em.createQuery(query).setParameter("account", account).executeUpdate();
+  }
+
+  public void removeCommentsBtAccount(Account account) {
+    String query = "DELETE FROM Comment c WHERE c.account = :account";
+    em.createQuery(query).setParameter("account", account).executeUpdate();
   }
 
   // public List<Post> findPosts2(int startPost) {

@@ -38,8 +38,12 @@ public class MemberRepository {
     return Optional.ofNullable(result);
   }
 
-  public void unregistMember(Account account) {
+  public void removeStudentInfo(Account account) {
+    Student student = account.getStudent();
+    em.remove(student);
+  }
 
+  public void unregistMember(Account account) {
     em.remove(account);
   }
 }
