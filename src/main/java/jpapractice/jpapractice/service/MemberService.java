@@ -153,6 +153,15 @@ public class MemberService {
   }
 
   @Transactional
+  public String getPassword(String accountId) {
+    Account account = memberRepository.accountFindById(accountId)
+                                      .orElseThrow(
+                                          () -> new DataNotFoundException(
+                                              "사용자가 존재하지 않습니다"));
+    return account.getPasswd();
+  }
+
+  @Transactional
   public void unregistMember(String accountId) {
     Account account = informationRepository.getAccountReference(accountId);
     memberRepository.unregistMember(account);
